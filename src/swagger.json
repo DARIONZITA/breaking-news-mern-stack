@@ -1,0 +1,779 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Breaking News - OpenAPI 3.0",
+    "version": "1.0.11",
+    "description": "this is a simple API for a news client and user registration",
+    "contact": {
+      "email": "dariozongogarcianzita@gmail.com",
+      "name": "Dário Zongo Garcia Nzita",
+      "url": "https://github.com/DARIONZITA"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "variables": {},
+      "description": "Local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "Operations about user"
+    },
+    {
+      "name": "auth",
+      "description": "Operations about login"
+    },
+    {
+      "name": "news",
+      "description": "Operations about news"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "get all users",
+        "description": "route that serves to get all users registered in the database ",
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "summary": "Search user by Id",
+        "description": "Route responsible for searching for user by id",        
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      },
+      "patch": {
+        "summary": "Update by user Id",
+        "description": "Route responsible for editing the user by id",
+        "requestBody": {
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/auth": {
+      "post": {
+        "summary": "login to breaking news",
+        "description": "Route responsible for logging in a registered user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "email": "clima@gmail.com",
+                    "password": "1234567"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "not found"
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/news": {
+      "post": {
+        "summary": "create a new News",
+        "description": "Route responsible for creating a new New",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/News"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "title": "depica",
+                    "text": "lua bonita e charmosa",
+                    "banner": "https://i.imgur.com/sPyvJdf.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      },
+      "get": {
+        "summary": "search all News",
+        "description": "Route responsible for fetching all posts",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/news/main": {
+      "summary": "search top News",
+      "description": "Route responsible for fetching Top News ",
+      "get": {
+        "summary": "search top News",
+        "description": "Route responsible for fetching top News",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/news/search": {
+      "get": {
+        "summary": "Search News by title",
+        "description": "Route responsible for fetching the News that match the title sent via query params",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/news/byuser": {
+      "get": {
+        "summary": "Search News for user Id",
+        "description": "Route responsible for fetching news by use id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/news/{id}": {
+      "get": {
+        "summary": "search News by Id",
+        "description": "Route responsible for fetching News by Id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of News",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      },
+      "delete": {
+        "summary": "delete a News",
+        "description": "Route responsible for delete a News by Id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of News",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      },
+      "patch": {
+        "summary": "Update a News",
+        "description": "Route responsible for updating a News",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of News",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/News"
+              },
+              "examples": {
+                "News": {
+                  "value": {
+                    "title": "depica",
+                    "text": "lua bonita e charmosa",
+                    "banner": "https://i.imgur.com/sPyvJdf.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/news/like/{id}": {
+      "get": {
+        "summary": "Like a news",
+        "description": "Route responsible for liking a News",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of News",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/news/comments/{newId}": {
+      "patch": {
+        "summary": "commet on a news",
+        "description": "Route responsible for commenting on a News",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "newId",
+            "in": "path",
+            "description": "ID of News",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comments"
+              },
+              "examples": {
+                "Comments": {
+                  "value": {
+                    "comment": "luz de cor depica"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/new/comments/{newId}/{commentId}": {
+      "patch": {
+        "summary": "remove comment in a News",
+        "description": "Route responsible for commenting on a News",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "newId",
+            "in": "path",
+            "description": "ID of News",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of comment",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Ok, removed"
+          },
+          "400": {
+            "description": "not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "tags": [
+          "news"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Comments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "comment": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "News": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "lua bonita"
+          },
+          "text": {
+            "type": "string",
+            "example": "lua bonita e charmosa"
+          },
+          "banner": {
+            "type": "string",
+            "example": "https://i.imgur.com/sPyvJdf.jpg"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string",
+            "example": "dario"
+          },
+          "likes": {
+            "type": "number",
+            "example": []
+          },
+          "comments": {
+            "type": "array",
+            "example": [],
+            "items": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dário"
+          },
+          "username": {
+            "type": "string",
+            "example": "User"
+          },
+          "email": {
+            "type": "string",
+            "example": "dario@gamil.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "dario"
+          },
+          "avatar": {
+            "type": "string",
+            "example": "https://i.imgur.com/sPyvJdf.jpg"
+          },
+          "background": {
+            "type": "string",
+            "example": "https://cdn.pixabay.com/photo/2023/04/10/10/37/park-7913450_960_720.jpg"
+          }
+        },
+        "xml": {
+          "name": "user"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

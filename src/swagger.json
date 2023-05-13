@@ -15,7 +15,7 @@
       "url": "https://api-breaking-news-hdk3.onrender.com/",
       "variables": {},
       "description": "render server"
-    }
+    },
     {
       "url": "http://localhost:3000",
       "variables": {},

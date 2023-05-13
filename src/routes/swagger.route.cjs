@@ -6,4 +6,4 @@ const swaggerDocument = require("../swagger.json");
 
 router.use("/",swaggerUiExpress.serve)
 router.get('/',swaggerUiExpress.setup(swaggerDocument))
-export default router
+module.exports = router

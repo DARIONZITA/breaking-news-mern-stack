@@ -63,7 +63,7 @@ const getAll=async(req, res)=>{
     const prevent_url= `${urlCurrent}?limit=${limit}&offset=${prevent > 0 ? prevent : 0}`
 
     news.length==0? 
-    res.status(400).send({message:'there are not news registrant'})
+    res.send(news)
     :res.send({
         prevent_url,
         next_url,
